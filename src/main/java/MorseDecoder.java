@@ -96,7 +96,44 @@ public class MorseDecoder {
         // else if issilence and wassilence
         // else if issilence and not wassilence
 
-        return "";
+//        String morseCode = "";
+//
+//        for (int interval = 0; interval < powerMeasurements.length; interval++) {
+//            if (powerMeasurements[interval] > POWER_THRESHOLD) {
+//                if (powerMeasurements[interval - 1] > POWER_THRESHOLD) {
+//                    morseCode += "-";
+//                } else {
+//                    morseCode += ".";
+//                }
+//            } else {
+//                if (powerMeasurements[interval - 1] > POWER_THRESHOLD) { //not wassilence
+//
+//                }
+//            }
+//        }
+//
+//        return morseCode;
+
+        int sawPowerCount = 0;
+        String returnString = "";
+        for (int binIndex = 0; binIndex < powerMeasurements.length; binIndex++) {
+            double powerMeasurement = powerMeasurements[binIndex];
+            if (powerMeasurement > POWER_THRESHOLD) {
+                if (sawPowerCount < 0) {
+                    returnString += powerCountToDotDash(sawPowerCount);
+                    sawPowerCount = 0;
+                }
+                sawPowerCount++;
+            } else {
+                if (sawPowerCount > 0) {
+                    returnString += powerCountToDotDash(sawPowerCount);
+                    sawPowerCount = 0;
+                }
+                sawPowerCount--;
+            }
+        }
+        returnString += powerCountToDotDash(sawPowerCount);
+        return returnString;
     }
 
     /**
